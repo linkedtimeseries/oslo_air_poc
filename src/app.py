@@ -32,7 +32,7 @@ async def main(model):
 async def startup():
     global cache
     loop = asyncio.get_event_loop()
-    loop.create_task(cache.load_data())
+    loop.create_task(cache.load_data(app.config['POLLING_INTERVAL']))
 
 if __name__ == "__main__":
     app.run()

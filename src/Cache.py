@@ -21,7 +21,7 @@ class Cache:
     def get_data(self, model):
         return self.data.get(model, {})
 
-    async def load_data(self):
+    async def load_data(self, interval = 5 * 60):
         while True:
             try:
                 loop = asyncio.get_running_loop()
@@ -36,4 +36,5 @@ class Cache:
             except Exception as e:
                 self.app.logger.error(e)
             finally:
-                await asyncio.sleep(5 * 60)
+                self.app.logger.info('Sleeping for {}s'.format(interval))
+                await asyncio.sleep(interval)
