@@ -116,5 +116,5 @@ class OsloMapper(DataMapper):
                     "@value": datetime.now(timezone.utc).isoformat(),
                 }
             },
-            '@graph': observations
+            '@included': observations
         }
