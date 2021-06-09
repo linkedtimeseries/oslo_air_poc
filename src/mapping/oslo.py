@@ -7,14 +7,14 @@ from mapping import DataMapper
 def create_page_id(base_uri):
     now = datetime.now(timezone.utc)
     query = "?" + urlencode(dict(ts=now.isoformat()))
-    return urljoin(urljoin(base_uri, '/data'), query)
+    return urljoin(urljoin(base_uri, './data'), query)
 
 def create_obs_collection_id(base_uri, obj):
-    path = "/data/observations/{}".format(obj['id'])
+    path = "./data/observations/{}".format(obj['id'])
     return urljoin(base_uri, path)
 
 def create_sensor_id(base_uri, obj):
-    path = "/data/sensors/{}".format(obj['id'])
+    path = "./data/sensors/{}".format(obj['id'])
     return urljoin(base_uri, path)
 
 def map_location(base_uri, obj):

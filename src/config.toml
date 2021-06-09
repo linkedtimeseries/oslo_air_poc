@@ -1,0 +1,2 @@
+SOURCE = "https://data.sensor.community/airrohr/v1/filter/country=BE"
+BASE_URI = "https://tree.linkeddatafragments.org/prototypes/air/"

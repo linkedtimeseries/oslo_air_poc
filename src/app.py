@@ -1,7 +1,7 @@
 from quart import Quart, render_template, websocket, Response
 
 import asyncio
-import json
+import toml
 
 from Cache import Cache
 
@@ -17,7 +17,7 @@ dictConfig({
 })
 
 app = Quart(__name__)
-app.config.from_file("config.json", load=json.load)
+app.config.from_file("config.toml", load=toml.load)
 
 cache = Cache(app)
 
