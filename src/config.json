@@ -1,0 +1,8 @@
+{
+    "ENV": "development",
+    "SOURCE": "https://data.sensor.community/airrohr/v1/filter/country=BE",
+    "BASE_URI": "https://example.org",
+    "COMPRESS_MIMETYPES": [
+        "application/ld+json"
+    ]
+}
