@@ -4,21 +4,26 @@ import dateutil.parser as parser
 
 from mapping import DataMapper
 
+
 def create_page_id(base_uri):
     now = datetime.now(timezone.utc)
     query = "?" + urlencode(dict(ts=now.isoformat()))
     return urljoin(urljoin(base_uri, './data'), query)
 
+
 def create_obs_collection_id(base_uri, obj):
     path = "./data/observations/{}".format(obj['id'])
     return urljoin(base_uri, path)
+
 
 def create_sensor_id(base_uri, obj):
     path = "./data/sensors/{}".format(obj['id'])
     return urljoin(base_uri, path)
 
+
 def map_location(base_uri, obj):
-    wkt_point = "POINT({} {} {})".format(obj['latitude'], obj['longitude'], obj['altitude'])
+    wkt_point = "POINT({} {} {})".format(
+        obj['latitude'], obj['longitude'], obj['altitude'])
     return {
         "@type": "SpatialSamplingFeature",
         "SamplingFeature.sampledFeature": "http://www.wikidata.org/entity/Q56245086",
@@ -28,6 +33,7 @@ def map_location(base_uri, obj):
         },
     }
 
+
 def map_sensor(base_uri, obj):
     return {
         "@type": ["Sensor", "Device"],
@@ -36,8 +42,10 @@ def map_sensor(base_uri, obj):
         "Device.modelName": obj["sensor_type"]["name"],
     }
 
+
 def map_obs_time(obj):
     return parser.parse(obj["timestamp"]).isoformat() + "Z"
+
 
 def map_obs_member(base_uri, obj):
     if 'id' not in obj:
@@ -82,8 +90,9 @@ def map_obs_member(base_uri, obj):
         }
     else:
         return None
-    
+
     return result
+
 
 def map_object(base_uri, obj):
     members = [map_obs_member(base_uri, x) for x in obj['sensordatavalues']]
@@ -99,8 +108,10 @@ def map_object(base_uri, obj):
             "ObservationCollection.hasMember": members,
         }
 
+
 class OsloMapper(DataMapper):
-    def map_data(source, base_uri, raw):
+    @classmethod
+    def map_data(_cls, source, base_uri, raw):
         observations = [map_object(base_uri, obj) for obj in raw]
         observations = [x for x in observations if x]
 

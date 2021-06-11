@@ -3,9 +3,12 @@ import requests
 import json
 
 from mapping.oslo import OsloMapper
+from mapping.smart_data_models import SDMMapper
+
 
 models = {
-    'oslo': OsloMapper
+    'oslo': OsloMapper,
+    'smart_data_models': SDMMapper,
 }
 
 class Cache:
