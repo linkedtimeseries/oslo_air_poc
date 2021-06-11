@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "hypercorn", "app:app", "-b", "0.0.0.0:80" ]
+CMD [ "hypercorn", "src/app:app", "-b", "0.0.0.0:80" ]

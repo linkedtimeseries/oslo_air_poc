@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from urllib.parse import urljoin, urlencode
 import dateutil.parser as parser
+import math
 
 from mapping import DataMapper
 
@@ -46,32 +47,36 @@ def map_observations(result, obj):
 
         raw_prop = sensor_value['value_type']
 
+        value = float(sensor_value["value"])
+        if math.isnan(value):
+            continue
+
         if raw_prop == 'temperature':
             result['temperature'] = {
                 "type": "Property",
-                "value": float(sensor_value["value"]),
+                "value": value,
             }
         elif raw_prop == 'humidity':
             result['relativeHumidity'] = {
                 "type": "Property",
-                "value": float(sensor_value["value"]),
+                "value": value,
             }
         elif raw_prop == 'P1':
             result['pm10'] = {
                 "type": "Property",
-                "value": float(sensor_value["value"]),
+                "value": value,
                 "unitCode":	"GQ",
             }
         elif raw_prop == 'P2':
             result['pm25'] = {
                 "type": "Property",
-                "value": float(sensor_value["value"]),
+                "value": value,
                 "unitCode":	"GQ",
             }
         elif raw_prop == 'pressure':
             result['atmosphericPressure'] = {
                 "type": "Property",
-                "value": float(sensor_value["value"]),
+                "value": value,
                 "unitCode":	"A97",
             }
 
@@ -87,13 +92,14 @@ def map_object(base_uri, obj):
             "value": map_obs_time(obj)
         },
         "location": map_location(obj['location']),
-        "@context": [
-            "https://smartdatamodels.org/context.jsonld",
-            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
-        ]
     }
 
     map_observations(result, obj)
+
+    result["@context"] = [
+        "https://smartdatamodels.org/context.jsonld",
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    ]
 
     return result
 

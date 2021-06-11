@@ -35,7 +35,7 @@ class Cache:
 
                 raw = json.loads(result.text)
                 for model, mapper in models.items():
-                    self.data[model] = json.dumps(mapper.map_data(source, self.app.config['BASE_URI'], raw))
+                    self.data[model] = json.dumps(mapper.map_data(source, self.app.config['BASE_URI'], raw), indent=2)
             except Exception as e:
                 self.app.logger.error(e)
             finally:
