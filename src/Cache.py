@@ -4,11 +4,15 @@ import json
 
 from mapping.oslo import OsloMapper
 from mapping.smart_data_models import SDMMapper
+from mapping.smart_data_models_kv import SDMMapperKV
+from mapping.json_ld_star import JSONLDStarMapper
 
 
 models = {
     'oslo': OsloMapper,
     'smart_data_models': SDMMapper,
+    'smart_data_models_kv': SDMMapperKV,
+    'json_ld_star': JSONLDStarMapper,
 }
 
 class Cache:

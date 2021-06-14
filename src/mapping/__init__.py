@@ -1,3 +1,4 @@
 class DataMapper:
-    def map_data(source, base_uri, raw):
+    @classmethod
+    def map_data(_cls, source, base_uri, raw):
         raise NotImplementedError
