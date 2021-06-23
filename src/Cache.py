@@ -2,6 +2,8 @@ import asyncio
 import requests
 import json
 
+from random import sample
+
 from mapping.oslo import OsloMapper
 from mapping.smart_data_models import SDMMapper
 from mapping.smart_data_models_kv import SDMMapperKV
@@ -38,6 +40,9 @@ class Cache:
                 self.app.logger.info('Data received')
 
                 raw = json.loads(result.text)
+                if self.app.config.get('SAMPLES'):
+                    raw = sample(raw, self.app.config['SAMPLES'])
+
                 for model, mapper in models.items():
                     self.data[model] = json.dumps(mapper.map_data(source, self.app.config['BASE_URI'], raw), indent=2)
             except Exception as e:

@@ -7,3 +7,6 @@ POLLING_INTERVAL = 240
 # used as a base for all generated identifiers, 
 # make it refer to a directory (ending with /)
 BASE_URI = "https://tree.linkeddatafragments.org/prototypes/air/"
+
+# Optional parameter, only republish a sampled subset of the base data
+SAMPLES = 100
