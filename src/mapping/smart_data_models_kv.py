@@ -29,8 +29,10 @@ def map_obs_time(obj):
 
 def map_location(obj):
     coords = [float(obj['latitude']), float(obj['longitude'])]
-    if obj['altitude']:
-        coords.append(float(obj['altitude']))
+    
+    # if obj['altitude']:
+    #     coords.append(float(obj['altitude']))
+    
     return {
         "type": "Point",
         "coordinates": coords
