@@ -9,4 +9,4 @@ POLLING_INTERVAL = 240
 BASE_URI = "https://tree.linkeddatafragments.org/prototypes/air/"
 
 # Optional parameter, only republish a sampled subset of the base data
-SAMPLES = 100
+# SAMPLES = 100
