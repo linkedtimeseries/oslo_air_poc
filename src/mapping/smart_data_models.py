@@ -7,7 +7,6 @@ from mapping import DataMapper
 
 # see https://smart-data-models.github.io/dataModel.Environment/AirQualityObserved/examples/example.jsonld
 
-
 def create_page_id(base_uri):
     now = datetime.now(timezone.utc)
     query = "?" + urlencode(dict(ts=now.isoformat()))
@@ -22,6 +21,9 @@ def create_sensor_id(base_uri, obj):
     path = "./data/sensors/{}".format(obj['id'])
     return urljoin(base_uri, path)
 
+def create_sensor_model_id(base_uri, obj):
+    path = "./data/sensor_models/{}".format(obj['id'])
+    return urljoin(base_uri, path)
 
 def map_obs_time(obj):
     return parser.parse(obj["timestamp"]).isoformat() + "Z"
@@ -42,7 +44,7 @@ def map_location(obj):
     }
 
 
-def map_observations(result, obj):
+def map_values(result, obj):
     for sensor_value in obj['sensordatavalues']:
         if 'id' not in sensor_value:
             continue
@@ -83,7 +85,7 @@ def map_observations(result, obj):
             }
 
 
-def map_object(base_uri, obj):
+def map_observation(base_uri, obj):
     # todo map sensor
 
     result = {
@@ -96,7 +98,7 @@ def map_object(base_uri, obj):
         "location": map_location(obj['location']),
     }
 
-    map_observations(result, obj)
+    map_values(result, obj)
 
     result["@context"] = [
         "https://smartdatamodels.org/context.jsonld",
@@ -105,11 +107,51 @@ def map_object(base_uri, obj):
 
     return result
 
+def map_sensors(base_uri, objects):
+    done = set()
+    result = []
+    for obj in objects:
+        sensor = obj['sensor']
+        if sensor['id'] not in done:
+            done.add(sensor['id'])
+            result.append({
+                "type": "Device",
+                "id": create_sensor_id(base_uri, sensor),
+                "refDeviceModel": create_sensor_model_id(base_uri, sensor['sensor_type']),
+                "@context": [
+                    "https://smartdatamodels.org/context.jsonld",
+                    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+                ]
+            })
+
+    return result
+
+def map_models(base_uri, objects):
+    done = set()
+    result = []
+    for obj in objects:
+        sensor_type = obj['sensor']['sensor_type']
+        if sensor_type['id'] not in done:
+            done.add(sensor_type['id'])
+            result.append({
+                "type": "DeviceModel",
+                "id": create_sensor_model_id(base_uri, sensor_type),
+                "manufacturerName": sensor_type['manufacturer'],
+                "modelName": sensor_type['name'],
+                "@context": [
+                    "https://smartdatamodels.org/context.jsonld",
+                    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+                ]
+            })
+
+    return result
 
 class SDMMapper(DataMapper):
     @classmethod
     def map_data(_cls, source, base_uri, raw):
-        observations = [map_object(base_uri, obj) for obj in raw]
+        models = map_models(base_uri, raw)
+        sensors = map_sensors(base_uri, raw)
+        observations = [map_observation(base_uri, obj) for obj in raw]
         observations = [x for x in observations if x]
 
         return {
@@ -123,5 +165,5 @@ class SDMMapper(DataMapper):
                     "@value": datetime.now(timezone.utc).isoformat(),
                 }
             },
-            '@included': observations
+            '@included': models + sensors + observations
         }
