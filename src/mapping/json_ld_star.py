@@ -50,7 +50,10 @@ def map_observations(result, obj):
 
         raw_prop = sensor_value['value_type']
 
-        value = float(sensor_value["value"])
+        try:
+            value = float(sensor_value["value"])
+        except ValueError:
+            break
         if math.isnan(value):
             continue
 
