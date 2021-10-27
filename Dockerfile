@@ -1,4 +1,4 @@
-FROM python:3
+FROM bynect/hypercorn-fastapi:python3.8-slim
 
 WORKDIR /usr/src/app
 
