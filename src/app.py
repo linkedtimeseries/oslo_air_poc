@@ -26,6 +26,9 @@ async def main(model):
     global cache
     resp = Response(cache.get_data(model))
     resp.headers['Content-Type'] = 'application/ld+json'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    maxAge = app.config['POLLING_INTERVAL']
+    resp.headers['Cache-Control'] = 'public, max-age=' + str(maxAge)
     return resp
 
 @app.before_serving
