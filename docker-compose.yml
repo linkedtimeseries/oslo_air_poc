@@ -4,7 +4,7 @@ services:
   server:
     image: server
     ports:
-      - "8080:80"
+      - "5000:80"
     build:
       context: ./
 
