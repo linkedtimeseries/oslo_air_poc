@@ -1,5 +1,6 @@
 # OSLO Air proof of concept
 
+Demonstrates how Air Quality data from Luftdaten can be described with the OSLO application profile for Air Quality and exposed with the Linked Data Event Stream (LDES) specification.
 ## Install
 
 ```
